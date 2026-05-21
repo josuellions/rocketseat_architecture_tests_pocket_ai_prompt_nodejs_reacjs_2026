@@ -6,23 +6,28 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "services:prisma:create": "prisma generate",
+    "services:prisma:migrate": "prisma migrate dev",
+    "services:up": "docker compose -f infra/docker-compose.yml up -d",
+    "services:stop": "docker compose -f infra/docker-compose.yml stop",
+    "services:down": "docker compose -f infra/docker-compose.yml down",
     "lint": "eslint"
   },
   "dependencies": {
-    "@prisma/client": "^7.8.0",
     "next": "16.0.3",
     "react": "19.2.0",
-    "react-dom": "19.2.0"
+    "react-dom": "19.2.0",
+    "@prisma/client": "6.16.3"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "prisma": "6.16.3",
     "dotenv": "^17.4.2",
     "eslint": "^9",
     "eslint-config-next": "16.0.3",
-    "prisma": "^7.8.0",
     "tailwindcss": "^4",
     "typescript": "^5"
   }
