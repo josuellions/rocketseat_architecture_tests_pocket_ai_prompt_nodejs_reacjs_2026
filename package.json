@@ -11,23 +11,29 @@
     "services:up": "docker compose -f infra/docker-compose.yml up -d",
     "services:stop": "docker compose -f infra/docker-compose.yml stop",
     "services:down": "docker compose -f infra/docker-compose.yml down",
-    "lint": "eslint"
+    "lint:type:check": "tsc --noEmit --skipLiCheck",
+    "lint:prettier:format": "prettier --write",
+    "lint:eslint:check": "eslint"
   },
   "dependencies": {
+    "@prisma/client": "6.16.3",
     "next": "16.0.3",
     "react": "19.2.0",
-    "react-dom": "19.2.0",
-    "@prisma/client": "6.16.3"
+    "react-dom": "19.2.0"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "prisma": "6.16.3",
     "dotenv": "^17.4.2",
     "eslint": "^9",
     "eslint-config-next": "16.0.3",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.5",
+    "lefthook": "^2.1.8",
+    "prettier": "^3.8.3",
+    "prisma": "6.16.3",
     "tailwindcss": "^4",
     "typescript": "^5"
   }
