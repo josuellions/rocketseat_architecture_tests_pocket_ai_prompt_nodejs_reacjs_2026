@@ -13,7 +13,10 @@
     "services:down": "docker compose -f infra/docker-compose.yml down",
     "lint:type:check": "tsc --noEmit --skipLiCheck",
     "lint:prettier:format": "prettier --write",
-    "lint:eslint:check": "eslint"
+    "lint:eslint:check": "eslint",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage"
   },
   "dependencies": {
     "@base-ui/react": "^1.5.0",
