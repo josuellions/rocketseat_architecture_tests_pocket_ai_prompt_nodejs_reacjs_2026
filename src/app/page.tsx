@@ -1,16 +1,14 @@
-import {Button} from '@/components/ui/button';
-
 export default function Home() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            Hello word - new project - arctheture and tests
-          </h1>
-          <Button variant="outline">New button</Button>
+    <section className="flex min-h-full">
+      <div className="flex flex-1 items-center justify-between">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold mb-4">Selecione um prompt</h1>
+          <p className="text-gray-400">
+            Escolha um prompt da lista ao lado para visualizar e editar.
+          </p>
         </div>
-      </main>
-    </div>
+      </div>
+    </section>
   );
 }
