@@ -1,0 +1,18 @@
+pre-commit:
+  commands:
+    check:
+      run: pnpm lint:prettier:format {staged_files}
+      glob: '*.{js,jsx,.mjs,ts,tsx,css,json,md}'
+      stage_fixed: true
+
+pre-push:
+  commands:
+    # validate:
+    #   glob: '*.{ts,tsx}'
+    #   run: pnpm lint:type:check
+    lint:
+      glob: '*.{tx, tsx}'
+      run: pnpm lint:eslint:check
+    test:
+      glob: '*.{ts, tsx}'
+      run: pnpm test:coverage
