@@ -49,7 +49,6 @@ export const SidebarContent = () => {
             <div className="md:hidden mb-4">
               <div className="flex items-center justify-between">
                 <Button
-                  size="icon"
                   variant="icon"
                   aria-label="Fechar menu"
                   title="Fechar menu"
@@ -64,6 +63,8 @@ export const SidebarContent = () => {
                 <Button
                   onClick={collapsedSidebar}
                   variant="secondary"
+                  aria-label="Minimizar sidebar"
+                  title="Minimizar sidebar"
                   className="hidden md:inline-flex p-2 hover:bg-gray-700 focus:outline-nome focus:ring-2 focus:ring-accent-500 rounded-lg transition-colors"
                 >
                   <ArrowLeftToLine className="w-5 h-5 text-gray-100" />
