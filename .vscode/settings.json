@@ -1,8 +1,15 @@
 {
+  "workbench.statusBar.visible": false,
+  "workbench.editor.showTabs": "single",
+  "workbench.editor.enablePreview": false,
+  "workbench.activityBar.location": "hidden",
+
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.formatOnSave": true,
   "prettier.requireConfig": true,
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint":"explicit" 
-  }
+  },
+   "editor.wordWrapColumn": 80,
+  "editor.wordWrap": "wordWrapColumn"
 }
