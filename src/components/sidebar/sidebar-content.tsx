@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import React, { startTransition, useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import {
   ArrowLeftToLine,
   X as CloseIcon,
@@ -25,6 +25,9 @@ export type SidebarContentProps = {
 
 export const SidebarContent = ({ prompts }: SidebarContentProps) => {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const [query, setQuery] = useState(searchParams.get('q') ?? '');
+
   const [isCollapsed, setIsCollapsed] = useState(false);
   const collapsedSidebar = () => setIsCollapsed(true);
   const expandSidebar = () => setIsCollapsed(false);
@@ -32,6 +35,17 @@ export const SidebarContent = ({ prompts }: SidebarContentProps) => {
   const handleNewPrompt = () => {
     console.log('>>NEW PROMPT');
     router.push('/new');
+  };
+
+  const handleQueryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newQuery = e.target.value;
+    setQuery(newQuery);
+
+    startTransition(() => {
+      const url = newQuery ? `/?q=${encodeURIComponent(newQuery)}` : '/';
+
+      router.push(url, { scroll: false });
+    });
   };
   return (
     <aside
@@ -90,6 +104,8 @@ export const SidebarContent = ({ prompts }: SidebarContentProps) => {
                   autoFocus
                   name="search-prompts"
                   placeholder="Buscar prompts..."
+                  onChange={handleQueryChange}
+                  value={query}
                 />
               </form>
             </section>

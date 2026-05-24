@@ -7,12 +7,14 @@ import {
 } from '@/components/sidebar/sidebar-content';
 
 const pushMock = jest.fn();
+let mockSearchParams = new URLSearchParams();
 
 jest.mock('next/navigation', () => ({
   useRouter: () => ({
     // push: jest.fn(),
     push: pushMock,
   }),
+  useSearchParams: () => mockSearchParams,
 }));
 
 const initialPrompts = [
@@ -73,7 +75,7 @@ describe('SidebarContent', () => {
       );
     });
 
-    it.only('should render prompt search input', async () => {
+    it('should render prompt search input', async () => {
       const text = 'Text search prompt AI';
       makeSut();
 
@@ -131,6 +133,39 @@ describe('SidebarContent', () => {
       await user.click(newButton);
 
       expect(pushMock).toHaveBeenCalledWith('/new');
+    });
+  });
+
+  describe('search prompt', () => {
+    it('should navigate using an encoded url when typing clear', async () => {
+      const text = 'text busca prompt';
+      makeSut();
+
+      const searchInput = screen.getByPlaceholderText('Buscar prompts...');
+
+      await user.type(searchInput, text);
+
+      expect(pushMock).toHaveBeenCalled();
+
+      const lastCall = pushMock.mock.calls.at(-1);
+
+      expect(lastCall?.[0]).toBe('/?q=text%20busca%20prompt');
+
+      await user.clear(searchInput);
+      const lastClearCall = pushMock.mock.calls.at(-1);
+
+      expect(lastClearCall?.[0]).toBe('/');
+    });
+
+    it.only('shoud start with the search field using the search params', () => {
+      const text = 'initial';
+      const searchParams = new URLSearchParams(`q=${text}`);
+      mockSearchParams = searchParams;
+      makeSut();
+
+      const searchInput = screen.getByPlaceholderText('Buscar prompts...');
+
+      expect(searchInput).toHaveValue(text);
     });
   });
 });
