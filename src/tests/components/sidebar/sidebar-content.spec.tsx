@@ -71,7 +71,7 @@ describe('SidebarContent', () => {
       expect(screen.getByText(inputPrompts[0].title)).toBeInTheDocument();
       expect(screen.getByText(inputPrompts[0].content)).toBeInTheDocument();
       expect(screen.getAllByRole('paragraph')).toHaveLength(
-        inputPrompts.length * 2
+        inputPrompts.length
       );
     });
 
@@ -87,7 +87,7 @@ describe('SidebarContent', () => {
     });
   });
 
-  describe('colapsar and expadir', () => {
+  describe('collapse and expand', () => {
     it('should start expanded and display the minimize button', () => {
       makeSut();
 
@@ -123,6 +123,36 @@ describe('SidebarContent', () => {
       expect(expandButton).toBeInTheDocument();
       expect(collapseButton).not.toBeInTheDocument();
     });
+    it('should display a create new button prompt in the collapse sidebar', async () => {
+      makeSut();
+
+      const collapseButton = screen.getByRole('button', {
+        name: /minimizar sidebar/i,
+      });
+
+      await user.click(collapseButton);
+
+      const newPromptButton = screen.getByRole('button', {
+        name: /new prompt/i,
+      });
+
+      expect(newPromptButton).toBeVisible();
+    });
+    it('do not display prompt list in collapsed sidebar', async () => {
+      makeSut();
+
+      const collapseButton = screen.getByRole('button', {
+        name: /minimizar sidebar/i,
+      });
+
+      await user.click(collapseButton);
+
+      const nav = screen.queryByRole('navigation', {
+        name: /list prompts/i,
+      });
+
+      expect(nav).not.toBeInTheDocument();
+    });
   });
 
   describe('new prompt', () => {
@@ -157,7 +187,7 @@ describe('SidebarContent', () => {
       expect(lastClearCall?.[0]).toBe('/');
     });
 
-    it.only('shoud start with the search field using the search params', () => {
+    it('shoud start with the search field using the search params', () => {
       const text = 'initial';
       const searchParams = new URLSearchParams(`q=${text}`);
       mockSearchParams = searchParams;

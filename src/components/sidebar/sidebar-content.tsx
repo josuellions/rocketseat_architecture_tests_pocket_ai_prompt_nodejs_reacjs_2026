@@ -13,14 +13,11 @@ import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Logo } from '../logo';
 
-type Prompt = {
-  id: string;
-  title: string;
-  content: string;
-};
+import { PromptSummary } from '@/core/domain/propmts/prompt.entity';
+import { PromptList } from '../ui/prompts';
 
 export type SidebarContentProps = {
-  prompts: Prompt[];
+  prompts: PromptSummary[];
 };
 
 export const SidebarContent = ({ prompts }: SidebarContentProps) => {
@@ -65,6 +62,18 @@ export const SidebarContent = ({ prompts }: SidebarContentProps) => {
               <ArrowRightToLine className="w-5 h-5 text-gray-500" />
             </Button>
           </header>
+
+          <div className="flex flex-col items-center space-y-4">
+            <Button
+              size="lg"
+              title="New prompt"
+              aria-label="New prompt"
+              className="w-full"
+              onClick={handleNewPrompt}
+            >
+              <AddIcon className="w-5 h-5" />
+            </Button>
+          </div>
         </section>
       )}
 
@@ -117,19 +126,15 @@ export const SidebarContent = ({ prompts }: SidebarContentProps) => {
               </Button>
             </div>
           </section>
+
+          <nav
+            aria-label="List prompts"
+            className="flex-1 overflow-auto px-6 pb-6"
+          >
+            <PromptList prompts={prompts} />
+          </nav>
         </>
       )}
-
-      {prompts.map((prompt) => (
-        <ul key={prompt.id}>
-          <li>
-            <p>{prompt.title}</p>
-          </li>
-          <li>
-            <p>{prompt.content}</p>
-          </li>
-        </ul>
-      ))}
     </aside>
   );
 };
