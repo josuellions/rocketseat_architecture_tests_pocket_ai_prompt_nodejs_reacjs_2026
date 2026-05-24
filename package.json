@@ -7,6 +7,7 @@
     "dev": "npm run services:up && next dev",
     "build": "next build",
     "start": "next start",
+    "services:prisma:seed": "prisma db seed",
     "services:prisma:create": "prisma generate",
     "services:prisma:migrate": "prisma migrate dev",
     "services:up": "docker compose -f infra/docker-compose.yml up -d",
