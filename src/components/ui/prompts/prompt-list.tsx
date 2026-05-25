@@ -1,4 +1,4 @@
-import { PromptSummary } from '@/core/domain/propmts/prompt.entity';
+import { PromptSummary } from '@/core/domain/prompts/prompt.entity';
 import { PromptCard } from './prompt-card';
 
 type PromptListProps = {
