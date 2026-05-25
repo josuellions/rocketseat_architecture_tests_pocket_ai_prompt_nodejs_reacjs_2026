@@ -15,7 +15,8 @@ export async function searchPromptAction(
   _prev: SearchFormState,
   formData: FormData
 ): Promise<SearchFormState> {
-  const term = String(formData.get('search-prompts') ?? '').trim();
+  // const term = String(formData.get('search-prompts') ?? '').trim();
+  const term = String(formData.get('query') ?? '').trim();
 
   const repository = new PrismaPromptRepository(prisma);
 

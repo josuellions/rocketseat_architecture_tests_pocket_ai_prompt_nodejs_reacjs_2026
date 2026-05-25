@@ -136,7 +136,8 @@ export const SidebarContent = ({ prompts }: SidebarContentProps) => {
                 <Input
                   type="text"
                   autoFocus
-                  name="search-prompts"
+                  //name="search-prompts"
+                  name="query"
                   placeholder="Buscar prompts..."
                   onChange={handleQueryChange}
                   value={query}
