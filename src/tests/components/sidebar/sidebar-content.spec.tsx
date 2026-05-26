@@ -7,6 +7,8 @@ import {
 } from '@/components/sidebar/sidebar-content';
 
 const pushMock = jest.fn();
+jest.spyOn(console, 'log').mockImplementation(() => {});
+
 let mockSearchParams = new URLSearchParams();
 
 jest.mock('next/navigation', () => ({

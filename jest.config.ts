@@ -13,6 +13,7 @@ const config = createJestConfig({
     '/.next/',
     '/e2e/',
     '/src/components/ui/',
+    '/src/generated/',
     '/src/lib/',
   ],
   testPathIgnorePatterns: [
