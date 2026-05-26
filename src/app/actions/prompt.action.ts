@@ -7,7 +7,7 @@ import { prisma } from '@/lib/prisma';
 
 type SearchFormState = {
   success: boolean;
-  message?: String;
+  message?: string;
   prompts?: PromptSummary[];
 };
 

@@ -3,6 +3,7 @@
 import React, {
   startTransition,
   useActionState,
+  useEffect,
   useRef,
   useState,
 } from 'react';
@@ -65,6 +66,14 @@ export const SidebarContent = ({ prompts }: SidebarContentProps) => {
       formRef.current?.requestSubmit();
     });
   };
+
+  useEffect(() => {
+    if (!hasQuery) return;
+
+    //Mantem o filtro dos prompts na URL
+    formRef.current?.requestSubmit();
+  }, [hasQuery]);
+
   return (
     <aside
       className={`border-r border-gray-700 flex flex-col h-full bg-gray-800 
