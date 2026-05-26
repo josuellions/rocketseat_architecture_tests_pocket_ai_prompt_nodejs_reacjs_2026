@@ -1,7 +1,13 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import React, {
+  startTransition,
+  useActionState,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import {
   ArrowLeftToLine,
   X as CloseIcon,
@@ -10,18 +16,64 @@ import {
 } from 'lucide-react';
 
 import { Button } from '../ui/button';
+import { Input } from '../ui/input';
 import { Logo } from '../logo';
 
-export const SidebarContent = () => {
+import { PromptSummary } from '@/core/domain/prompts/prompt.entity';
+import { PromptList } from '../ui/prompts';
+import { searchPromptAction } from '@/app/actions/prompt.action';
+import { Spinner } from '../ui/spinner';
+
+export type SidebarContentProps = {
+  prompts: PromptSummary[];
+};
+
+export const SidebarContent = ({ prompts }: SidebarContentProps) => {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const [query, setQuery] = useState(searchParams.get('q') ?? '');
+
+  const [searchState, searchAction, isPending] = useActionState(
+    searchPromptAction,
+    {
+      success: true,
+      prompts,
+    }
+  );
+
+  const hasQuery = query.trim().length > 0;
+  const promptList = hasQuery ? (searchState.prompts ?? prompts) : prompts;
+
   const [isCollapsed, setIsCollapsed] = useState(false);
   const collapsedSidebar = () => setIsCollapsed(true);
   const expandSidebar = () => setIsCollapsed(false);
+
+  const formRef = useRef<HTMLFormElement | null>(null);
 
   const handleNewPrompt = () => {
     console.log('>>NEW PROMPT');
     router.push('/new');
   };
+
+  const handleQueryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newQuery = e.target.value;
+    setQuery(newQuery);
+
+    startTransition(() => {
+      const url = newQuery ? `/?q=${encodeURIComponent(newQuery)}` : '/';
+
+      router.push(url, { scroll: false });
+      formRef.current?.requestSubmit();
+    });
+  };
+
+  useEffect(() => {
+    if (!hasQuery) return;
+
+    //Mantem o filtro dos prompts na URL
+    formRef.current?.requestSubmit();
+  }, [hasQuery]);
+
   return (
     <aside
       className={`border-r border-gray-700 flex flex-col h-full bg-gray-800 
@@ -40,6 +92,18 @@ export const SidebarContent = () => {
               <ArrowRightToLine className="w-5 h-5 text-gray-500" />
             </Button>
           </header>
+
+          <div className="flex flex-col items-center space-y-4">
+            <Button
+              size="lg"
+              title="New prompt"
+              aria-label="New prompt"
+              className="w-full"
+              onClick={handleNewPrompt}
+            >
+              <AddIcon className="w-5 h-5" />
+            </Button>
+          </div>
         </section>
       )}
 
@@ -49,7 +113,6 @@ export const SidebarContent = () => {
             <div className="md:hidden mb-4">
               <div className="flex items-center justify-between">
                 <Button
-                  size="icon"
                   variant="icon"
                   aria-label="Fechar menu"
                   title="Fechar menu"
@@ -64,12 +127,42 @@ export const SidebarContent = () => {
                 <Button
                   onClick={collapsedSidebar}
                   variant="secondary"
+                  aria-label="Minimizar sidebar"
+                  title="Minimizar sidebar"
                   className="hidden md:inline-flex p-2 hover:bg-gray-700 focus:outline-nome focus:ring-2 focus:ring-accent-500 rounded-lg transition-colors"
                 >
                   <ArrowLeftToLine className="w-5 h-5 text-gray-100" />
                 </Button>
               </header>
             </div>
+
+            <section className="mb-5">
+              <form
+                ref={formRef}
+                action={searchAction}
+                className="relative group w-full"
+              >
+                <Input
+                  type="text"
+                  autoFocus
+                  //name="search-prompts"
+                  name="query"
+                  placeholder="Buscar prompts..."
+                  onChange={handleQueryChange}
+                  value={query}
+                />
+                {isPending && (
+                  <div
+                    title="Carregando prompts"
+                    aria-label="Carregando prompts"
+                    className="absolute right-2 top-1/2 -translate-y-1/2 flex  items-center gap-2"
+                  >
+                    <Spinner />
+                    <span className="text-xs">Carregando...</span>
+                  </div>
+                )}
+              </form>
+            </section>
 
             <div className="">
               <Button size="lg" className="w-full" onClick={handleNewPrompt}>
@@ -78,6 +171,13 @@ export const SidebarContent = () => {
               </Button>
             </div>
           </section>
+
+          <nav
+            aria-label="List prompts"
+            className="flex-1 overflow-auto px-6 pb-6"
+          >
+            <PromptList prompts={promptList} />
+          </nav>
         </>
       )}
     </aside>
