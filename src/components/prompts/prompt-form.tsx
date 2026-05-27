@@ -13,6 +13,7 @@ import {
 } from '@/core/application/prompts/create-prompt.dto';
 import { createPromptAction } from '@/app/actions/prompt.action';
 import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 
 export const PromptForm = () => {
   const router = useRouter();
@@ -28,9 +29,11 @@ export const PromptForm = () => {
     const result = await createPromptAction(data);
 
     if (!result.success) {
+      toast.error(result.message);
       return;
     }
 
+    toast.success(result.message);
     router.refresh();
   };
 
