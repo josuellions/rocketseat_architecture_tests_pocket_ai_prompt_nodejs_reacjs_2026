@@ -1,7 +1,7 @@
 import {
   createPromptAction,
   searchPromptAction,
-} from '@/app/actions/prompt.action';
+} from '@/app/actions/prompt.actions';
 import { beforeEach } from 'node:test';
 
 jest.mock('@/lib/prisma', () => ({ prisma: {} }));

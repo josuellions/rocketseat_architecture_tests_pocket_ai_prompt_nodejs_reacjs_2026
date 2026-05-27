@@ -22,7 +22,7 @@ import { Input } from '@/components/ui/input';
 import { Logo } from '@/components/logo';
 
 import { PromptSummary } from '@/core/domain/prompts/prompt.entity';
-import { searchPromptAction } from '@/app/actions/prompt.action';
+import { searchPromptAction } from '@/app/actions/prompt.actions';
 
 export type SidebarContentProps = {
   prompts: PromptSummary[];
