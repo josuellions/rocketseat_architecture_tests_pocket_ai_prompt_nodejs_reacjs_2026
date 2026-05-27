@@ -1,6 +1,6 @@
 'use server';
 
-import z, { success } from 'zod';
+import z from 'zod';
 import { prisma } from '@/lib/prisma';
 import { PromptSummary } from '@/core/domain/prompts/prompt.entity';
 import { PrismaPromptRepository } from '@/infra/repository/prisma-prompts.repository';

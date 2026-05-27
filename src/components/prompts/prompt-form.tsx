@@ -1,19 +1,22 @@
 'use client';
 
-import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
+import { useRouter } from 'next/navigation';
+import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { Form, FormControl, FormField, FormItem } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
+import { CopyButton } from '@/components/button-actions';
+import { Form, FormControl, FormField, FormItem } from '@/components/ui/form';
+
 import {
   CreatePromptDTO,
   createPromptSchema,
 } from '@/core/application/prompts/create-prompt.dto';
+
 import { createPromptAction } from '@/app/actions/prompt.actions';
-import { useRouter } from 'next/navigation';
-import { toast } from 'sonner';
 
 export const PromptForm = () => {
   const router = useRouter();
@@ -23,6 +26,11 @@ export const PromptForm = () => {
       title: '',
       content: '',
     },
+  });
+
+  const content = useWatch({
+    control: form.control,
+    name: 'content',
   });
 
   const submit = async (data: CreatePromptDTO) => {
@@ -41,6 +49,7 @@ export const PromptForm = () => {
     <Form {...form}>
       <form onSubmit={form.handleSubmit(submit)} className="space-y-6">
         <header className="flex flex-wrap gap-2 items-center mb-6 justify-end">
+          <CopyButton content={content} />
           <Button
             size="sm"
             type="submit"
