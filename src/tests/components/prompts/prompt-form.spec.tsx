@@ -77,4 +77,21 @@ describe('PromptForm', () => {
     expect(toast.error).toHaveBeenCalledWith('error');
     expect(refreshMock).not.toHaveBeenCalledTimes(1);
   });
+  it('should display a `required` message when the form is empty', async () => {
+    makeSut();
+
+    const submitButton = screen.getByRole('button', { name: 'Salvar' });
+
+    await user.click(submitButton);
+
+    expect(
+      screen.getByText('Title é obrigatório e deve ter mais de 3 caracteres.')
+    ).toBeVisible();
+    expect(
+      screen.getByText(
+        'Contexto é obrigatório e deve ter mais de 3 caracteres.'
+      )
+    ).toBeVisible();
+    expect(createActionMock).not.toHaveBeenCalled();
+  });
 });

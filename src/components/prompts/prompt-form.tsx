@@ -9,7 +9,13 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { CopyButton } from '@/components/button-actions';
-import { Form, FormControl, FormField, FormItem } from '@/components/ui/form';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from '@/components/ui/form';
 
 import {
   CreatePromptDTO,
@@ -67,6 +73,7 @@ export const PromptForm = () => {
               <FormControl>
                 <Input autoFocus placeholder="Título do prompt" {...field} />
               </FormControl>
+              <FormMessage className="text-red-400" />
             </FormItem>
           )}
         />
@@ -84,6 +91,7 @@ export const PromptForm = () => {
                   {...field}
                 />
               </FormControl>
+              <FormMessage className="text-red-400" />
             </FormItem>
           )}
         />
