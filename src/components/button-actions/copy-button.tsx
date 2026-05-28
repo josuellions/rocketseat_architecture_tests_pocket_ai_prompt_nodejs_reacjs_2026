@@ -6,7 +6,7 @@ import { toast } from 'sonner';
 
 import { Button } from '../ui/button';
 
-type CopyButtonProps = {
+export type CopyButtonProps = {
   content: string;
 };
 
@@ -38,7 +38,7 @@ export const CopyButton = ({ content }: CopyButtonProps) => {
       }, 2_000);
     } catch (error) {
       const _error = error as Error;
-      toast.error(`Error ao copiar o texto: ${_error.message} `);
+      toast.error(`Error ao copiar o texto: ${_error.message}`);
     }
   };
 
