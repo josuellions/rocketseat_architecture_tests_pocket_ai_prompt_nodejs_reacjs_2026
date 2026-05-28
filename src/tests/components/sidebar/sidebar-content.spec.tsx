@@ -1,4 +1,4 @@
-import { render, screen } from '@/lib/test-utils';
+import { render, screen, waitFor } from '@/lib/test-utils';
 import useEvent from '@testing-library/user-event';
 
 import {
@@ -238,7 +238,7 @@ describe('SidebarContent', () => {
 
       submitSpy.mockRestore();
     });
-    it('shoud start with the search field using the search params', () => {
+    it('shoud start with the search field using the search params', async () => {
       const text = 'initial';
       const searchParams = new URLSearchParams(`q=${text}`);
       mockSearchParams = searchParams;
@@ -246,7 +246,9 @@ describe('SidebarContent', () => {
 
       const searchInput = screen.getByPlaceholderText('Buscar prompts...');
 
-      expect(searchInput).toHaveValue(text);
+      await waitFor(() => {
+        expect(searchInput).toHaveValue(text);
+      });
     });
   });
 });
