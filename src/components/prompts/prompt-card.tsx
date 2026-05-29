@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 import { PromptSummary } from '@/core/domain/prompts/prompt.entity';
 
-type PromptCardProps = {
+export type PromptCardProps = {
   prompt: PromptSummary;
 };
 export const PromptCard = ({ prompt }: PromptCardProps) => {

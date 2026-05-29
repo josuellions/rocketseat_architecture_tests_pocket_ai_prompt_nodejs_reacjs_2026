@@ -15,14 +15,14 @@ import {
   ArrowRightToLine,
 } from 'lucide-react';
 
-import { Button } from '../ui/button';
-import { Input } from '../ui/input';
-import { Logo } from '../logo';
+import { PromptList } from '@/components/prompts';
+import { Spinner } from '@/components/ui/spinner';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Logo } from '@/components/logo';
 
 import { PromptSummary } from '@/core/domain/prompts/prompt.entity';
-import { PromptList } from '../ui/prompts';
-import { searchPromptAction } from '@/app/actions/prompt.action';
-import { Spinner } from '../ui/spinner';
+import { searchPromptAction } from '@/app/actions/prompt.actions';
 
 export type SidebarContentProps = {
   prompts: PromptSummary[];

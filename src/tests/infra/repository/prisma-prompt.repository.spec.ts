@@ -1,8 +1,17 @@
-import { Prompt } from '@/core/domain/prompts/prompt.entity';
 import { PrismaClient } from '@/generated/prisma/client';
+import { Prompt } from '@/core/domain/prompts/prompt.entity';
+import { CreatePromptDTO } from '@/core/application/prompts/create-prompt.dto';
 import { PrismaPromptRepository } from '@/infra/repository/prisma-prompts.repository';
 
 type PromptDelegateMock = {
+  create: jest.MockedFunction<
+    (args: { data: CreatePromptDTO }) => Promise<void>
+  >;
+  findFirst: jest.MockedFunction<
+    (args: {
+      where: { title: string };
+    }) => Promise<Pick<Prompt, 'id' | 'title' | 'content'> | null>
+  >;
   findMany: jest.MockedFunction<
     (args: {
       orderBy?: { createdAt: 'asc' | 'desc' };
@@ -23,7 +32,9 @@ type PrismaMock = {
 function createMockPrisma() {
   const mock: PrismaMock = {
     prompt: {
+      create: jest.fn(),
       findMany: jest.fn(),
+      findFirst: jest.fn(),
     },
   };
 
@@ -39,6 +50,20 @@ describe('PrismaPromptRepository', () => {
     repository = new PrismaPromptRepository(prisma);
   });
 
+  describe('create', () => {
+    it('should use the create method with the correct data', async () => {
+      const input = {
+        title: 'Title create 01',
+        content: 'Content create 01',
+      };
+
+      await repository.create(input);
+
+      expect(prisma.prompt.create).toHaveBeenCalledWith({
+        data: input,
+      });
+    });
+  });
   describe('findMany', () => {
     it('should sort by createdAt desc and map the results', async () => {
       const dateNow = new Date();
@@ -134,6 +159,24 @@ describe('PrismaPromptRepository', () => {
         },
       });
       expect(results).toMatchObject(input);
+    });
+  });
+  describe('findByTitle', () => {
+    it('should use the `findByTitle` method if the title already exists', async () => {
+      const input = {
+        id: '1',
+        title: 'Title create exist',
+        content: 'Content create title exist',
+      };
+
+      prisma.prompt.findFirst.mockResolvedValue(input);
+
+      const result = await repository.findByTitle(input.title);
+
+      expect(prisma.prompt.findFirst).toHaveBeenCalledWith({
+        where: { title: input.title },
+      });
+      expect(result).toEqual(input);
     });
   });
 });
