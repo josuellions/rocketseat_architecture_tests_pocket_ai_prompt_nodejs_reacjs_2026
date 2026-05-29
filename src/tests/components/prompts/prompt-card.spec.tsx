@@ -5,7 +5,6 @@ import {
 import { render, screen } from '@/lib/test-utils';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
-import { string } from 'zod';
 
 const makeSut = ({ prompt }: PromptCardProps) => {
   return render(<PromptCard prompt={prompt} />);

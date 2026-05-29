@@ -22,15 +22,25 @@ import {
   createPromptSchema,
 } from '@/core/application/prompts/create-prompt.dto';
 
-import { createPromptAction } from '@/app/actions/prompt.actions';
+import {
+  createPromptAction,
+  updatePromptAction,
+} from '@/app/actions/prompt.actions';
+import { Prompt } from '@/core/domain/prompts/prompt.entity';
 
-export const PromptForm = () => {
+type PromptFromProps = {
+  prompt?: Prompt | null;
+};
+
+export const PromptForm = ({ prompt }: PromptFromProps) => {
   const router = useRouter();
+  const isEdit = !!prompt?.id;
+
   const form = useForm<CreatePromptDTO>({
     resolver: zodResolver(createPromptSchema),
     defaultValues: {
-      title: '',
-      content: '',
+      title: prompt?.title || '',
+      content: prompt?.content || '',
     },
   });
 
@@ -40,7 +50,9 @@ export const PromptForm = () => {
   });
 
   const submit = async (data: CreatePromptDTO) => {
-    const result = await createPromptAction(data);
+    const result = isEdit
+      ? await updatePromptAction({ id: prompt?.id, ...data })
+      : await createPromptAction(data);
 
     if (!result.success) {
       toast.error(result.message);
