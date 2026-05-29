@@ -14,9 +14,8 @@ export class PrismaPromptRepository implements PromptRepository {
       },
     });
   }
-
   async update(id: string, data: Partial<CreatePromptDTO>): Promise<Prompt> {
-    const update = await this.prisma.prompt.update({
+    const updated = await this.prisma.prompt.update({
       where: { id },
       data: {
         ...(data.title !== undefined ? { title: data.title } : {}),
@@ -24,7 +23,7 @@ export class PrismaPromptRepository implements PromptRepository {
       },
     });
 
-    return update;
+    return updated;
   }
 
   async findById(id: string): Promise<Prompt | null> {

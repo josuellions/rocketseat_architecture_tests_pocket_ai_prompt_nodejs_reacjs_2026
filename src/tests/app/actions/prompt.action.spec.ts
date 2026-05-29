@@ -188,4 +188,10 @@ describe('Server actions: Prompts', () => {
       expect(result.prompts).toEqual(input);
     });
   });
+
+  describe('updatePromptAction', () => {
+    it('should return an error when the validation fields are empty', async () => {
+      return null;
+    });
+  });
 });

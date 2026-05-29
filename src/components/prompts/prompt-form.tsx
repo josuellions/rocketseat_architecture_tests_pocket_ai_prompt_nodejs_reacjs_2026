@@ -28,7 +28,7 @@ import {
 } from '@/app/actions/prompt.actions';
 import { Prompt } from '@/core/domain/prompts/prompt.entity';
 
-type PromptFromProps = {
+export type PromptFromProps = {
   prompt?: Prompt | null;
 };
 
