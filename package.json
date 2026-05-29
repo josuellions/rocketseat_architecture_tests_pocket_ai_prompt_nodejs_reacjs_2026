@@ -18,7 +18,12 @@
     "lint:eslint:check": "eslint",
     "test": "jest",
     "test:watch": "jest --watchAll --runInBand --verbose",
-    "test:coverage": "jest --coverage"
+    "test:coverage": "jest --coverage",
+    "test:e2e": "pnpm exec playwright test",
+    "test:e2e:ui": "pnpm exec playwright test --ui",
+    "test:e2e:headed": "pnpm exec playwright test --headed",
+    "test:e2e:debug": "pnpm exec playwright test --debug",
+    "test:e2e:report": "pnpm exec playwright show-report"
   },
   "dependencies": {
     "@base-ui/react": "^1.5.0",
