@@ -82,7 +82,7 @@ export async function updatePromptAction(
 
     return {
       success: false,
-      message: 'Error de validação',
+      message: 'Error de validação.',
       errors: fieldErrors,
     };
   }
