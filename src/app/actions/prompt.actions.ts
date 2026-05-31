@@ -9,7 +9,13 @@ import {
   CreatePromptDTO,
   createPromptSchema,
 } from '@/core/application/prompts/create-prompt.dto';
+import {
+  UpdatePromptDTO,
+  updatePromptSchema,
+} from '@/core/application/prompts/update-prompt.dto';
 import { CreatePromptUseCase } from '@/core/application/prompts/create-prompt.use-case';
+import { UpdatePromptUseCase } from '@/core/application/prompts/update-prompt.use-case';
+import { DeletePromptUseCase } from '@/core/application/prompts/delete-prompt.use-case';
 
 type SearchFormState = {
   success: boolean;
@@ -17,7 +23,16 @@ type SearchFormState = {
   prompts?: PromptSummary[];
 };
 
-export async function createPromptAction(data: CreatePromptDTO) {
+type FormState = {
+  success: boolean;
+  message?: string;
+  prompts?: PromptSummary;
+  errors?: unknown;
+};
+
+export async function createPromptAction(
+  data: CreatePromptDTO
+): Promise<FormState> {
   const validated = createPromptSchema.safeParse(data);
 
   if (!validated.success) {
@@ -58,6 +73,49 @@ export async function createPromptAction(data: CreatePromptDTO) {
   };
 }
 
+export async function updatePromptAction(
+  data: UpdatePromptDTO
+): Promise<FormState> {
+  const validated = updatePromptSchema.safeParse(data);
+
+  if (!validated.success) {
+    const { fieldErrors } = z.flattenError(validated.error);
+
+    return {
+      success: false,
+      message: 'Error de validação.',
+      errors: fieldErrors,
+    };
+  }
+
+  try {
+    const repository = new PrismaPromptRepository(prisma);
+    const useCase = new UpdatePromptUseCase(repository);
+    await useCase.execute(validated.data);
+  } catch (error) {
+    const _error = error as Error;
+
+    console.log(_error);
+
+    if (_error.message === 'PROMPT_NOT_FOUND') {
+      return {
+        success: false,
+        message: 'Prompt não encontrado.',
+      };
+    }
+
+    return {
+      success: false,
+      message: 'Falha ao atualizar o prompt.',
+    };
+  }
+
+  return {
+    success: true,
+    message: 'Prompt atualizado com sucesso.',
+  };
+}
+
 export async function searchPromptAction(
   _prev: SearchFormState,
   formData: FormData
@@ -89,4 +147,25 @@ export async function searchPromptAction(
       message: 'Falha ao buscar prompts.',
     };
   }
+}
+
+export async function deletePromptAction(id: string): Promise<FormState> {
+  if (!id) {
+    return { success: false, message: 'Id do prompt é obrigatório!' };
+  }
+
+  try {
+    const repository = new PrismaPromptRepository(prisma);
+    const useCase = new DeletePromptUseCase(repository);
+    await useCase.execute(id);
+  } catch (error) {
+    const _error = error as Error;
+
+    if (_error.message === 'PROMPT_NOT_FOUND') {
+      return { success: false, message: 'Prompt não encontrado!' };
+    }
+    return { success: false, message: 'Falha ao remover o prompt!' };
+  }
+
+  return { success: true, message: 'Prompt removido com sucesso!' };
 }

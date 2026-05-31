@@ -1,11 +1,55 @@
+'use client';
+
 import Link from 'next/link';
+import { useState } from 'react';
+import {
+  TrashIcon as DeleteIcon,
+  Loader2Icon as LoadingIcon,
+} from 'lucide-react';
+
+import { Button } from '../ui/button';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '../ui/alert-dialog';
 
 import { PromptSummary } from '@/core/domain/prompts/prompt.entity';
+import { toast } from 'sonner';
+import { deletePromptAction } from '@/app/actions/prompt.actions';
 
 export type PromptCardProps = {
   prompt: PromptSummary;
 };
+
 export const PromptCard = ({ prompt }: PromptCardProps) => {
+  const [isDeliting, setIsDeliting] = useState(false);
+
+  const handleDelete = async () => {
+    setIsDeliting(true);
+
+    try {
+      const result = await deletePromptAction(prompt?.id);
+
+      if (!result.success) {
+        toast.error(result.message);
+      }
+
+      toast.success(result.message);
+    } catch (error) {
+      const _error = error as Error;
+      toast.error(_error.message);
+    } finally {
+      setIsDeliting(false);
+    }
+  };
+
   return (
     <li className="p-3 rounded-lg transition-all duration-200 group relative hover:bg-gray-700">
       <header className="flex items-start justify-between">
@@ -17,6 +61,43 @@ export const PromptCard = ({ prompt }: PromptCardProps) => {
             {prompt.content}
           </p>
         </Link>
+
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <Button
+              type="button"
+              variant="destructive"
+              title="Remover prompt"
+              aria-label="Remover prompt"
+              className="text-red-400"
+            >
+              <DeleteIcon className="w-3 h-3" />
+            </Button>
+          </AlertDialogTrigger>
+
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Remover prompt</AlertDialogTitle>
+              <AlertDialogDescription>
+                Tem certeza que deseja remover este prompt? Está ação não pode
+                ser revertida.
+              </AlertDialogDescription>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={handleDelete}
+                  disabled={isDeliting}
+                  className="bg-red-400"
+                >
+                  {isDeliting && (
+                    <LoadingIcon className="w-4 h-4 mr-2 animate-spin" />
+                  )}
+                  Confirmar
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogHeader>
+          </AlertDialogContent>
+        </AlertDialog>
       </header>
     </li>
   );
