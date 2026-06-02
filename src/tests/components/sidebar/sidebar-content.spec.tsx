@@ -89,6 +89,25 @@ describe('SidebarContent', () => {
     });
   });
 
+  describe('collapse and expand (mobile)', () => {
+    it('should start expanded and display the minimize button', async () => {
+      makeSut();
+
+      const aside = screen.getByRole('complementary');
+      expect(aside.className).toContain('-translate-x-full');
+
+      const openButton = screen.getByRole('button', { name: /abrir menu/i });
+
+      await user.click(openButton);
+      expect(aside.className).toContain('translate-x-0');
+
+      const closeButton = screen.getByRole('button', { name: /fechar menu/i });
+
+      await user.click(closeButton);
+      expect(aside.className).toContain('-translate-x-full');
+    });
+  });
+
   describe('collapse and expand', () => {
     it('should start expanded and display the minimize button', () => {
       makeSut();

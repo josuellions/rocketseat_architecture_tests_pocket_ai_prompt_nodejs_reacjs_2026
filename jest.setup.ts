@@ -15,4 +15,8 @@ if (!globalThis.crypto) {
   });
 }
 
+jest.mock('next/navigation', () => ({
+  useRouter: () => ({ refresh: jest.fn() }),
+}));
+
 expect.extend({});
