@@ -5,8 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "npm run services:up && next dev",
-    "build": "next build",
     "start": "next start",
+    "build": "prisma generate && prisma migrate deploy &&  next build",
     "services:prisma:seed": "prisma db seed",
     "services:prisma:create": "prisma generate",
     "services:prisma:migrate": "prisma migrate dev",
