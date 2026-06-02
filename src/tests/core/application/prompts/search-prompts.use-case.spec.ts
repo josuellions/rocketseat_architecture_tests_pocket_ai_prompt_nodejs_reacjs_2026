@@ -19,11 +19,7 @@ describe('SearchPromptsUseCase', () => {
     },
   ];
 
-  const repository: PromptRepository = {
-    create: jest.fn(),
-    update: jest.fn(),
-    findById: jest.fn(),
-    findByTitle: jest.fn(),
+  const repository = {
     findMany: async () => input,
     searchMany: async (term) =>
       input.filter(
@@ -31,7 +27,8 @@ describe('SearchPromptsUseCase', () => {
           prompt.title.toLowerCase().includes(term?.toLowerCase()) ||
           prompt.title.toLowerCase().includes(term?.toLowerCase())
       ),
-  };
+  } as PromptRepository;
+
   it('should return all prompts when the term is empty', async () => {
     const useCase = new SearchPromptUseCase(repository);
 

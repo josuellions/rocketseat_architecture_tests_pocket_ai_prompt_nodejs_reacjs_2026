@@ -14,11 +14,15 @@ const makeSut = ({ prompt }: PromptCardProps) => {
 };
 
 const pushMock = jest.fn();
-
 const deleteMock = jest.fn();
+const refreshMock = jest.fn();
 
 jest.mock('@/app/actions/prompt.actions', () => ({
   deletePromptAction: (id: string) => deleteMock(id),
+}));
+
+jest.mock('next/navigation', () => ({
+  useRouter: () => ({ refresh: refreshMock }),
 }));
 
 jest.mock('next/link', () => ({
@@ -51,6 +55,13 @@ jest.mock('sonner', () => ({
 }));
 
 describe('PromptCard', () => {
+  beforeEach(() => {
+    deleteMock.mockReset();
+    refreshMock.mockReset();
+    (toast.error as jest.Mock).mockReset();
+    (toast.success as jest.Mock).mockReset();
+  });
+
   const user = userEvent.setup();
   const prompt = { id: '1', title: 'Title 01', content: 'Content 01' };
 
@@ -98,6 +109,7 @@ describe('PromptCard', () => {
     await user.click(screen.getByRole('button', { name: /confirmar/i }));
 
     expect(toast.success).toHaveBeenCalledWith(messageSuccess);
+    expect(refreshMock).toHaveBeenCalledTimes(1);
   });
   it('should display a message when an error accors or removal fails', async () => {
     makeSut({ prompt });
@@ -115,6 +127,7 @@ describe('PromptCard', () => {
     await user.click(screen.getByRole('button', { name: /confirmar/i }));
 
     expect(toast.error).toHaveBeenCalledWith(messageError);
+    expect(refreshMock).not.toHaveBeenCalled();
   });
   it('should display a message error when the action throws an exception', async () => {
     const messageError = 'Prompt não encontrado!';
@@ -130,5 +143,6 @@ describe('PromptCard', () => {
     await user.click(screen.getByRole('button', { name: /confirmar/i }));
 
     expect(toast.error).toHaveBeenCalledWith(messageError);
+    expect(refreshMock).not.toHaveBeenCalled();
   });
 });

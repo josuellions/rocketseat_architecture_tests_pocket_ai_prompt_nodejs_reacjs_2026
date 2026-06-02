@@ -16,6 +16,8 @@ import {
   MenuIcon,
 } from 'lucide-react';
 
+import { motion } from 'motion/react';
+
 import { PromptList } from '@/components/prompts';
 import { Spinner } from '@/components/ui/spinner';
 import { Button } from '@/components/ui/button';
@@ -28,6 +30,8 @@ import { searchPromptAction } from '@/app/actions/prompt.actions';
 export type SidebarContentProps = {
   prompts: PromptSummary[];
 };
+
+const fadeTransition = { duration: 0.2, delay: 0.1 };
 
 export const SidebarContent = ({ prompts }: SidebarContentProps) => {
   const router = useRouter();
@@ -91,9 +95,11 @@ export const SidebarContent = ({ prompts }: SidebarContentProps) => {
         <MenuIcon className="w-5 h-5 text-gray-100" />
       </Button>
 
-      <aside
+      <motion.aside
         className={`border-r border-gray-700 flex flex-col h-full bg-gray-800 
         transition-[transform, width] duration-300 ease-in-out fixed md:relative left-0 top-0 z-50 md:z-auto w-[80vw] sm:w-[320px] ${isCollapsed ? 'md:w-[72px]' : 'md:w-[384px]'} ${isMobileOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0`}
+        initial={false}
+        transition={{ duration: 0.3, ease: 'easeInOut' }}
       >
         {isCollapsed && (
           <section className="px-2 py-6">
@@ -103,13 +109,18 @@ export const SidebarContent = ({ prompts }: SidebarContentProps) => {
                 variant="icon"
                 title="Expandir sidebar"
                 aria-label="Expandir sidebar"
-                className="hidden md:inline-flex p-2 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-accent-500 rounded-lg transition-colors"
+                className="md:inline-flex p-2 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-accent-500 rounded-lg transition-colors"
               >
                 <ArrowRightToLine className="w-5 h-5 text-gray-500" />
               </Button>
             </header>
 
-            <div className="flex flex-col items-center space-y-4">
+            <motion.div
+              className="flex flex-col items-center space-y-4"
+              initial={false}
+              animate={{ opacity: 1 }}
+              transition={fadeTransition}
+            >
               <Button
                 size="lg"
                 title="New prompt"
@@ -119,7 +130,7 @@ export const SidebarContent = ({ prompts }: SidebarContentProps) => {
               >
                 <AddIcon className="w-5 h-5" />
               </Button>
-            </div>
+            </motion.div>
           </section>
         )}
 
@@ -138,7 +149,12 @@ export const SidebarContent = ({ prompts }: SidebarContentProps) => {
                   </Button>
                 </div>
               </div>
-              <div className="flex w-full items-center justify-between mb-6">
+              <motion.div
+                className="flex w-full items-center justify-between mb-6"
+                initial={false}
+                animate={{ opacity: 1 }}
+                transition={fadeTransition}
+              >
                 <header className="flex w-full items-center justify-between">
                   <Logo />
                   <Button
@@ -146,12 +162,12 @@ export const SidebarContent = ({ prompts }: SidebarContentProps) => {
                     variant="secondary"
                     aria-label="Minimizar sidebar"
                     title="Minimizar sidebar"
-                    className="hidden md:inline-flex p-2 hover:bg-gray-700 focus:outline-nome focus:ring-2 focus:ring-accent-500 rounded-lg transition-colors"
+                    className="md:inline-flex p-2 hover:bg-gray-700 focus:outline-nome focus:ring-2 focus:ring-accent-500 rounded-lg transition-colors"
                   >
                     <ArrowLeftToLine className="w-5 h-5 text-gray-100" />
                   </Button>
                 </header>
-              </div>
+              </motion.div>
 
               <section className="mb-5">
                 <form
@@ -162,7 +178,6 @@ export const SidebarContent = ({ prompts }: SidebarContentProps) => {
                   <Input
                     type="text"
                     autoFocus
-                    //name="search-prompts"
                     name="query"
                     placeholder="Buscar prompts..."
                     onChange={handleQueryChange}
@@ -181,23 +196,32 @@ export const SidebarContent = ({ prompts }: SidebarContentProps) => {
                 </form>
               </section>
 
-              <div className="">
+              <motion.div
+                transition={fadeTransition}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                initial={false}
+              >
                 <Button size="lg" className="w-full" onClick={handleNewPrompt}>
                   <AddIcon className="w-5 h-5 mr-2" />
                   Novo prompt
                 </Button>
-              </div>
+              </motion.div>
             </section>
 
-            <nav
+            <motion.nav
               aria-label="List prompts"
+              exit={{ opacity: 0 }}
+              initial={false}
+              animate={{ opacity: 1 }}
+              transition={fadeTransition}
               className="flex-1 overflow-auto px-6 pb-6"
             >
               <PromptList prompts={promptList} />
-            </nav>
+            </motion.nav>
           </>
         )}
-      </aside>
+      </motion.aside>
     </>
   );
 };

@@ -1,7 +1,10 @@
 'use client';
 
 import Link from 'next/link';
+import { toast } from 'sonner';
 import { useState } from 'react';
+import { motion } from 'motion/react';
+import { useRouter } from 'next/navigation';
 import {
   TrashIcon as DeleteIcon,
   Loader2Icon as LoadingIcon,
@@ -21,7 +24,6 @@ import {
 } from '../ui/alert-dialog';
 
 import { PromptSummary } from '@/core/domain/prompts/prompt.entity';
-import { toast } from 'sonner';
 import { deletePromptAction } from '@/app/actions/prompt.actions';
 
 export type PromptCardProps = {
@@ -30,6 +32,7 @@ export type PromptCardProps = {
 
 export const PromptCard = ({ prompt }: PromptCardProps) => {
   const [isDeliting, setIsDeliting] = useState(false);
+  const router = useRouter();
 
   const handleDelete = async () => {
     setIsDeliting(true);
@@ -39,9 +42,11 @@ export const PromptCard = ({ prompt }: PromptCardProps) => {
 
       if (!result.success) {
         toast.error(result.message);
+        return;
       }
 
       toast.success(result.message);
+      router.refresh();
     } catch (error) {
       const _error = error as Error;
       toast.error(_error.message);
@@ -51,7 +56,17 @@ export const PromptCard = ({ prompt }: PromptCardProps) => {
   };
 
   return (
-    <li className="p-3 rounded-lg transition-all duration-200 group relative hover:bg-gray-700">
+    <motion.li
+      className="p-3 rounded-lg transition-all duration-200 group relative hover:bg-gray-700"
+      aria-label={prompt.title}
+      initial={{ opacity: 1, height: 'auto' }}
+      exit={{
+        transition: { duration: -0.3, ease: 'easeInOut' },
+        marginBottom: 0,
+        opacity: 0,
+        height: 0,
+      }}
+    >
       <header className="flex items-start justify-between">
         <Link href={`/${prompt.id}`} prefetch className="flex-1 min-w-0">
           <h3 className="font-medium text-sm text-white group-hover:text-accent-300 transition-colors">
@@ -99,6 +114,6 @@ export const PromptCard = ({ prompt }: PromptCardProps) => {
           </AlertDialogContent>
         </AlertDialog>
       </header>
-    </li>
+    </motion.li>
   );
 };
