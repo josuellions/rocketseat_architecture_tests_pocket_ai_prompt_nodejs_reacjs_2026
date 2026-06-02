@@ -1,17 +1,17 @@
+import { revalidatePath } from 'next/cache';
 import {
   createPromptAction,
   deletePromptAction,
   searchPromptAction,
   updatePromptAction,
 } from '@/app/actions/prompt.actions';
-import { beforeEach } from 'node:test';
 
 jest.mock('@/lib/prisma', () => ({ prisma: {} }));
 
 const mockedSearchExecute = jest.fn();
 const mockedCreateExecute = jest.fn();
 const mockedUpdateExecute = jest.fn();
-const mockeDeleteExecute = jest.fn();
+const mockedDeleteExecute = jest.fn();
 
 jest.mock('@/core/application/prompts/search-prompts.use-case', () => ({
   SearchPromptUseCase: jest
@@ -30,10 +30,15 @@ jest.mock('@/core/application/prompts/update-prompt.use-case', () => ({
     .fn()
     .mockImplementation(() => ({ execute: mockedUpdateExecute })),
 }));
+
 jest.mock('@/core/application/prompts/delete-prompt.use-case', () => ({
   DeletePromptUseCase: jest
     .fn()
-    .mockImplementation(() => ({ execute: mockeDeleteExecute })),
+    .mockImplementation(() => ({ execute: mockedDeleteExecute })),
+}));
+
+jest.mock('next/cache', () => ({
+  revalidatePath: jest.fn(),
 }));
 
 jest.spyOn(console, 'log').mockImplementation(() => {});
@@ -42,7 +47,8 @@ beforeEach(() => {
   mockedSearchExecute.mockReset();
   mockedCreateExecute.mockReset();
   mockedUpdateExecute.mockReset();
-  mockeDeleteExecute.mockReset();
+  mockedDeleteExecute.mockReset();
+  (revalidatePath as jest.Mock).mockReset();
 });
 
 describe('Server actions: Prompts', () => {
@@ -94,6 +100,7 @@ describe('Server actions: Prompts', () => {
 
       expect(result?.success).toBe(true);
       expect(result?.message).toBe('Prompt criado com sucesso.');
+      expect(revalidatePath).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -155,6 +162,7 @@ describe('Server actions: Prompts', () => {
         success: true,
         message: 'Prompt atualizado com sucesso.',
       });
+      expect(revalidatePath).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -169,7 +177,7 @@ describe('Server actions: Prompts', () => {
     });
 
     it('should return a generic error when it fails to delete', async () => {
-      mockeDeleteExecute.mockRejectedValue(new Error('UNKNOWN'));
+      mockedDeleteExecute.mockRejectedValue(new Error('UNKNOWN'));
 
       const promptId = '1';
 
@@ -180,7 +188,7 @@ describe('Server actions: Prompts', () => {
     });
 
     it('should return an error when the prompt does not exist', async () => {
-      mockeDeleteExecute.mockRejectedValue(new Error('PROMPT_NOT_FOUND'));
+      mockedDeleteExecute.mockRejectedValue(new Error('PROMPT_NOT_FOUND'));
 
       const promptId = '1';
 
@@ -191,7 +199,7 @@ describe('Server actions: Prompts', () => {
     });
 
     it('should delete successfully with valid data', async () => {
-      mockeDeleteExecute.mockResolvedValue(undefined);
+      mockedDeleteExecute.mockResolvedValue(undefined);
 
       const promptId = '1';
 
@@ -201,6 +209,7 @@ describe('Server actions: Prompts', () => {
         success: true,
         message: 'Prompt removido com sucesso!',
       });
+      expect(revalidatePath).toHaveBeenCalledTimes(1);
     });
   });
 

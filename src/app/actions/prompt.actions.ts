@@ -2,6 +2,7 @@
 
 import z from 'zod';
 import { prisma } from '@/lib/prisma';
+import { revalidatePath } from 'next/cache';
 import { PromptSummary } from '@/core/domain/prompts/prompt.entity';
 import { PrismaPromptRepository } from '@/infra/repository/prisma-prompts.repository';
 import { SearchPromptUseCase } from '@/core/application/prompts/search-prompts.use-case';
@@ -50,6 +51,7 @@ export async function createPromptAction(
     const useCase = new CreatePromptUseCase(repository);
 
     await useCase.execute(validated.data);
+    revalidatePath('/', 'layout');
   } catch (error) {
     const _error = error as Error;
     console.log(error);
@@ -92,6 +94,7 @@ export async function updatePromptAction(
     const repository = new PrismaPromptRepository(prisma);
     const useCase = new UpdatePromptUseCase(repository);
     await useCase.execute(validated.data);
+    revalidatePath('/', 'layout');
   } catch (error) {
     const _error = error as Error;
 
@@ -158,6 +161,7 @@ export async function deletePromptAction(id: string): Promise<FormState> {
     const repository = new PrismaPromptRepository(prisma);
     const useCase = new DeletePromptUseCase(repository);
     await useCase.execute(id);
+    revalidatePath('/', 'layout');
   } catch (error) {
     const _error = error as Error;
 
