@@ -1,3 +1,6 @@
+<img width="1763" height="758" alt="2026-06-03_prompt_manager" src="https://github.com/user-attachments/assets/7b26e5c1-6bce-45bc-813d-a965b50194e2" />
+
+
 ### Project - pocket-ai - JS
 
 - [Link application web](https://rocketseat-architecture-tests-pocke.vercel.app/)
@@ -14,9 +17,11 @@
 
 ---
 
-Desenvolvimento acadêmico aplicando arquitetura de softwares e testes em uma aplicação Prompt Manager em NodeJS, NextJS e ReactJS , conceitos de integração com API REST com IA, uma aplicação web prática e intuitiva que permite organizar todos os seus prompts de inteligência artificial em um só lugar.
+Desenvolvimento acadêmico aplicando arquitetura de softwares e testes em uma aplicação Prompt Manager em NodeJS, NextJS e ReactJS , conceitos de integração com API REST, uma aplicação web prática e intuitiva que permite organizar todos os seus prompts de inteligência artificial em um só lugar.
 
 Aplicado na pratica conceitos de arquitetura de software, SOLID, Fundamentos de teste, testes unitários, testes de integração, testes e2e, Jest, React Testing Library,Playwright, mocks, TDD, Poly ll, deploy.
+
+<br/>
 
 ##### Tecnologias
 
